@@ -1,0 +1,127 @@
+- name: Configure work computer
+  hosts: fc
+
+  pre_tasks:
+    - name: ensure /usr/local/bin is a directory
+      file:
+        path: /usr/local/bin
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+      become: true
+    - name: speed up dnf
+      lineinfile:
+        dest: /etc/dnf/dnf.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        state: "present"
+      loop:
+        - regexp: "^fastestmirror="
+          line: "fastestmirror=True"
+        - regexp: "^max_parallel_downloads="
+          line: "max_parallel_downloads=10"
+      when: ansible_os_family == 'RedHat'
+      become: true
+    - name: import gpg key for fusion repos
+      ansible.builtin.rpm_key:
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-fedora-2020"
+        - "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020"
+      become: true
+    - name: enable rpm fusion repos
+      dnf:
+        name: "{{ item }}"
+        state: 'present'
+      loop:
+        - https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ansible_distribution_major_version}}.noarch.rpm
+        - https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm
+      when: ansible_distribution == 'Fedora'
+      become: true
+
+  roles:
+    - { role: 'geerlingguy.docker', become: true }
+    - { role: 'geerlingguy.pip', become: true }
+
+  tasks:
+    - name: "Install utils"
+      package:
+        state: present
+        name:
+         - wireguard
+         - wireguard-tools
+         - keepassxc
+         - VirtualBox
+         - git
+         - btrbk
+         - zsh
+         - ncdu
+         - powertop
+         - tlp
+         - ansible
+         - fedora-workstation-repositories
+         - google-chrome-stable
+         - gimp
+         - curl
+         - vim-enhanced
+         - tmux
+         - byobu
+         - vlc
+         - peek
+         - flameshot
+      become: true
+      tags: utils
+
+    - name: enable tlp service
+      ansible.builtin.systemd:
+        state: restarted
+        enabled: yes
+        name: tlp
+      become: true
+      tags: tlp
+
+    - name: ZSH
+      include_tasks: zsh.yaml
+      tags: zsh
+    
+    - name: phpstorm
+      include_tasks: phpstorm.yaml
+      tags: phpstorm
+
+    - name: vscode
+      include_tasks: vscode.yaml
+      tags: vscode
+
+    - name: discord
+      include_tasks: discord.yaml
+      tags: discord
+    
+    - name: minikube
+      include_tasks: minikube.yaml
+      tags: minikube, kubectl, kustomize, k9s, devspace, mkcert, sops, age
+    
+    - name: teams
+      include_tasks: teams.yaml
+      tags: teams
+
+    - name: ssh key
+      include_tasks: ssh_key.yaml
+      tags: ssh_key
+
+    - name: edge
+      include_tasks: edge.yaml
+      tags: edge
+
+    - name: nomachine
+      dnf:
+        name: https://download.nomachine.com/download/7.9/Linux/nomachine_7.9.2_1_x86_64.rpm
+        state: present
+        disable_gpg_check: yes
+      become: true
+      tags: nomachine
+
+    - name: notepadqq
+      include_tasks: notepadqq.yaml
+      tags: notepadqq

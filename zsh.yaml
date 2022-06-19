@@ -1,0 +1,35 @@
+- name: change default shell
+  user:
+    name: "{{ ansible_user }}"
+    shell: "/usr/bin/zsh"
+  become: true
+  tags: zsh
+- name: install oh-my-zsh
+  command:
+    cmd: git clone -c core.autocrlf=input --depth=1 https://github.com/robbyrussell/oh-my-zsh.git .oh-my-zsh
+    creates: ~/.oh-my-zsh
+  tags: zsh
+- name: tweak PATH
+  lineinfile:
+    path: ~/.zshrc
+    regexp: "export PATH="
+    line: "export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
+    state: present
+  tags: zsh
+- name: install sheldon
+  shell:
+    cmd: curl --proto '=https' -fLsS https://rossmacarthur.github.io/install/crate.sh | bash -s -- --repo rossmacarthur/sheldon --to ~/.local/bin
+    creates: ~/.local/bin/sheldon
+  tags: zsh
+- name: copy sheldon plugins file
+  copy:
+    src: plugins.toml
+    dest: ~/.config/sheldon/plugins.toml
+  tags: zsh
+- name: activate sheldon
+  lineinfile:
+    path: ~/.zshrc
+    regexp: '^eval "$(sheldon source)"'
+    line: 'eval "$(sheldon source)"'
+    state: "present"
+  tags: zsh

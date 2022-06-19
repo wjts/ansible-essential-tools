@@ -1,0 +1,52 @@
+- name: Get JSON from PhpStorm URL
+  uri:
+    url: "{{ phpstorm_releases_url }}"
+    method: GET
+    return_content: yes
+  register: phpstorm_releases
+  tags: phpstorm
+
+- name: Get latest version number and download url
+  set_fact:
+    phpstorm_available_version: "{{ phpstorm_releases.json.PS[0].version }}"
+    phpstorm_available_url: "{{ phpstorm_releases.json.PS[0].downloads.linux.link }}"
+    phpstorm_available_build: "{{ phpstorm_releases.json.PS[0].build }}"
+  when:
+    - phpstorm_releases.json.PS[0].version is defined
+    - phpstorm_releases.json.PS[0].downloads.linux.link is defined
+    - phpstorm_releases.json.PS[0].build is defined
+  tags: phpstorm
+
+- name: Download latest version of PhpStorm
+  get_url:
+    url: "{{ phpstorm_available_url }}"
+    dest: "/tmp/PhpStorm-{{ phpstorm_available_version }}.tar.gz"
+  tags: phpstorm
+
+- name: Create PhpStorm install directory
+  become: true
+  file:
+    path: "{{ phpstorm_install_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  tags: phpstorm
+
+- name: Extract PhpStorm
+  unarchive:
+    extra_opts: ['--strip-components=1']
+    src: "/tmp/PhpStorm-{{ phpstorm_available_version }}.tar.gz"
+    remote_src: 'yes'
+    dest: "{{ phpstorm_install_path }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    # creates: "{{ phpstorm_install_path }}/build.txt"
+  tags: phpstorm
+
+- name: Create symlink for phpstorm
+  file:
+    src: "{{phpstorm_install_path}}/bin/phpstorm.sh"
+    dest: /usr/local/bin/phpstorm
+    state: link
+  become: true
+  tags: phpstorm

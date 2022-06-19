@@ -1,0 +1,12 @@
+docker_edition: 'ce'
+docker_package: "docker-{{ docker_edition }}"
+docker_package_state: present
+docker_install_compose: true
+pip_install_packages:
+  - name: docker
+  - name: youtube-dl
+
+phpstorm_releases_url: "https://data.services.jetbrains.com/products/releases?code=PS&latest=true&type=release"
+phpstorm_version: ""
+phpstorm_url: ""
+phpstorm_install_path: "/opt/phpstorm"

@@ -1,0 +1,17 @@
+- name: Add repo for edge
+  yum_repository:
+    name: edge
+    description: Microsoft Edge
+    baseurl: https://packages.microsoft.com/yumrepos/edge
+    gpgcheck: yes
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+  become: true
+  tags: edge
+
+- name: Install Edge
+  package:
+    name: microsoft-edge-stable
+    state: present
+    update_cache: yes
+  become: true
+  tags: edge

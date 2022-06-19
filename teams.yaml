@@ -1,0 +1,17 @@
+- name: Add repo for teams
+  yum_repository:
+    name: msteams
+    description: Microsoft Teams
+    baseurl: https://packages.microsoft.com/yumrepos/ms-teams
+    gpgcheck: yes
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+  become: true
+  tags: teams
+
+- name: Install Teams
+  package:
+    name: teams
+    state: present
+    update_cache: yes
+  become: true
+  tags: teams

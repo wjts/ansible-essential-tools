@@ -1,0 +1,14 @@
+- name: Add the flathub flatpak repository remote
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+  become: true
+  tags: notepadqq
+- name: Install notepadqq via flatpak
+  community.general.flatpak:
+    name: notepadqq
+    state: present
+    remote: flathub
+  become: true
+  tags: notepadqq

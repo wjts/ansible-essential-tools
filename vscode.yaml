@@ -1,0 +1,25 @@
+- name: import gpg key for vscode
+  ansible.builtin.rpm_key:
+    state: present
+    key: "https://packages.microsoft.com/keys/microsoft.asc"
+  become: true
+  tags: vscode
+
+- name: Add repo for vscode
+  yum_repository:
+    name: vscode
+    description: Visual Studio Code
+    baseurl: https://packages.microsoft.com/yumrepos/vscode
+    gpgcheck: yes
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+  become: true
+  tags: edge
+
+- name: Install vscode
+  dnf:
+    name: code
+    state: 'present'
+    update_cache: yes
+  when: ansible_distribution == 'Fedora'
+  become: true
+  tags: vscode

@@ -1,0 +1,33 @@
+- name: Add the flathub flatpak repository remote
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+  become: true
+  tags: discord
+- name: Install discord via flatpak
+  community.general.flatpak:
+    name: discord
+    state: present
+    remote: flathub
+  become: true
+  tags: discord
+- name: Prepare pipewire config (discord notification sound fix)
+  command:
+    cmd: rsync /usr/share/pipewire/ ~/.config/pipewire -r
+    creates: ~/.config/pipewire
+  tags: discord
+- name: Increased pipewire setting
+  lineinfile:
+    path: ~/.config/pipewire/pipewire.conf
+    regexp: "default.clock.min-quantum"
+    line: "	default.clock.min-quantum   = 2048"
+    firstmatch: yes
+    state: present
+  tags: discord
+- name: Restart user pipewire
+  ansible.builtin.systemd:
+    state: restarted
+    name: pipewire
+    scope: user
+  tags: discord
