@@ -71,6 +71,7 @@
          - vlc
          - peek
          - flameshot
+         - openfortivpn
       become: true
       tags: utils
 
