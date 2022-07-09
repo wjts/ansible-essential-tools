@@ -23,6 +23,12 @@
           line: "max_parallel_downloads=10"
       when: ansible_os_family == 'RedHat'
       become: true
+    - name: update system
+      dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+      become: true
     - name: import gpg key for fusion repos
       ansible.builtin.rpm_key:
         state: present
