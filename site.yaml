@@ -72,6 +72,10 @@
          - peek
          - flameshot
          - openfortivpn
+         - htop
+         - xclip
+         - NetworkManager-fortisslvpn-gnome
+         - thunderbird
       become: true
       tags: utils
 
@@ -126,3 +130,14 @@
     - name: notepadqq
       include_tasks: notepadqq.yaml
       tags: notepadqq
+    
+    - name: zfs utils
+      include_tasks: zfs.yaml
+      tags: zfs
+
+    - name: add user to groups
+      user:
+        name: "{{ ansible_user }}"
+        append: yes
+        groups: docker,libvirt
+      become: true

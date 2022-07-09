@@ -5,6 +5,10 @@
     flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
   become: true
   tags: phpstorm
+- name: Remove filter from flathub
+  shell: flatpak remote-modify flathub --no-filter
+  become: true
+  tags: phpstorm
 - name: Install phpstorm via flatpak
   community.general.flatpak:
     name: phpstorm

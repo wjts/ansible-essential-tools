@@ -5,6 +5,14 @@
   become: true
   tags: minikube
 
+- name: ~/.minikube permissions
+  file:
+    path: ~/.minikube
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  become: true
+  tags: minikube
+
 - name: Install minikube
   dnf:
     name: https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
@@ -12,6 +20,13 @@
     disable_gpg_check: yes
   become: true
   tags: minikube
+
+- name: "Install virtualization"
+  package:
+    state: present
+    name:
+      - "@virtualization"
+  become: true
 
 - name: Get kubectl stable version
   uri:
