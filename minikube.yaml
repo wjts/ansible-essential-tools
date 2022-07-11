@@ -7,7 +7,7 @@
 
 - name: ~/.minikube permissions
   file:
-    path: ~/.minikube
+    path: "~{{ ansible_user }}/.minikube"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
   become: true

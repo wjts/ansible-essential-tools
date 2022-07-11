@@ -9,6 +9,12 @@
     cmd: git clone -c core.autocrlf=input --depth=1 https://github.com/robbyrussell/oh-my-zsh.git .oh-my-zsh
     creates: ~/.oh-my-zsh
   tags: zsh
+- name: prepare ~/.zshrc
+  copy:
+    src: ~/.oh-my-zsh/templates/zshrc.zsh-template
+    dest: ~/.zshrc
+    remote_src: yes
+  tags: zsh
 - name: tweak PATH
   lineinfile:
     path: ~/.zshrc
@@ -30,11 +36,6 @@
     src: plugins.toml
     dest: ~/.config/sheldon/plugins.toml
   tags: zsh
-- name: prepare ~/.zshrc
-  copy:
-    src: ~/.oh-my-zsh/templates/zshrc.zsh-template
-    dest: ~/.zshrc
-    remote_src: yes
 - name: activate sheldon
   lineinfile:
     path: ~/.zshrc

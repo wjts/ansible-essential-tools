@@ -7,8 +7,9 @@
 
 - name: add zfs repo
   dnf:
-    name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm"
+    name: "https://zfsonlinux.org/fedora/zfs-release-fedora-2-1.noarch.rpm"
     state: 'present'
+    disable_gpg_check: yes
   when: ansible_distribution == 'Fedora'
   become: true
   tags: zfs
@@ -24,6 +25,7 @@
   package:
     name: zfs
     state: present
+    update_cache: yes
   become: true
   tags: zfs
 
@@ -31,6 +33,7 @@
   community.general.modprobe:
     name: zfs
     state: present
+  become: true
 
 - name: load zfs at boot
   command: echo zfs > /etc/modules-load.d/zfs.conf
