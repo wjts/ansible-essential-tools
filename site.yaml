@@ -151,6 +151,10 @@
       include_tasks: phpstorm.yaml
       tags: phpstorm
 
+    - name: dbeaver-ce
+      include_tasks: dbeaver-ce_flatpak.yaml
+      tags: dbeaver-ce
+
     - name: add user to groups
       user:
         name: "{{ ansible_user }}"
