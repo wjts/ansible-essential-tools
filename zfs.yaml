@@ -1,4 +1,4 @@
-- name: remove old and unmantained zfs-fuse
+- name: remove old and unmaintained zfs-fuse
   package:
     name: zfs-fuse
     state: absent
