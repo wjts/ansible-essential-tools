@@ -43,10 +43,28 @@
     # creates: "{{ phpstorm_install_path }}/build.txt"
   tags: phpstorm
 
-- name: Create symlink for phpstorm
-  file:
-    src: "{{phpstorm_install_path}}/bin/phpstorm.sh"
-    dest: /usr/local/bin/phpstorm
-    state: link
+- name: Check if libvirt firewall zone exists
+  command: firewall-cmd --get-zones
+  become: true
+  register: libvirt_firewall
+  tags: phpstorm
+
+- name: Enable xdebug port on libvirt firewall zone
+  ansible.posix.firewalld:
+    zone: libvirt
+    port: 9003/tcp
+    permanent: yes
+    state: enabled
+  when: libvirt_firewall.stdout is search("libvirt")
+  register: opened_port
   become: true
   tags: phpstorm
+
+- name: Restart firewalld if port has been opened
+  ansible.builtin.systemd:
+    state: restarted
+    name: firewalld
+  when: opened_port.changed
+  become: true
+  tags: phpstorm
+  
