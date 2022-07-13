@@ -1,0 +1,11 @@
+- name: Add the flathub flatpak repository remote
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+  become: true
+  tags: flathub
+- name: Remove filter from flathub
+  shell: flatpak remote-modify flathub --no-filter
+  become: true
+  tags: flathub

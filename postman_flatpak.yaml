@@ -1,9 +1,9 @@
 - import_tasks: flathub.yaml
-  tags: phpstorm
-- name: Install phpstorm via flatpak
+  tags: postman
+- name: Install postman via flatpak
   community.general.flatpak:
-    name: phpstorm
+    name: com.getpostman.Postman
     state: present
     remote: flathub
   become: true
-  tags: phpstorm
+  tags: postman
