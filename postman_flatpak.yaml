@@ -1,4 +1,4 @@
-- include_tasks: flathub.yaml
+- import_tasks: flathub.yaml
   tags: postman
 - name: Install postman via flatpak
   community.general.flatpak:

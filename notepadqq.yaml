@@ -1,4 +1,4 @@
-- include_tasks: flathub.yaml
+- import_tasks: flathub.yaml
   tags: notepadqq
 - name: Install notepadqq via flatpak
   community.general.flatpak:
