@@ -1,0 +1,20 @@
+- include_tasks: flathub.yaml
+  tags: postman
+- name: Add the flathub flatpak repository remote
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+  become: true
+  tags: postman
+- name: Remove filter from flathub
+  shell: flatpak remote-modify flathub --no-filter
+  become: true
+  tags: postman
+- name: Install postman via flatpak
+  community.general.flatpak:
+    name: com.getpostman.Postman
+    state: present
+    remote: flathub
+  become: true
+  tags: postman

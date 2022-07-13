@@ -155,6 +155,10 @@
       include_tasks: dbeaver-ce_flatpak.yaml
       tags: dbeaver-ce
 
+    - name: postman
+      include_tasks: postman_flatpak.yaml
+      tags: postman
+
     - name: add user to groups
       user:
         name: "{{ ansible_user }}"

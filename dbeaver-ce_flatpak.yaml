@@ -1,13 +1,4 @@
-- name: Add the flathub flatpak repository remote
-  community.general.flatpak_remote:
-    name: flathub
-    state: present
-    flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
-  become: true
-  tags: dbeaver-ce
-- name: Remove filter from flathub
-  shell: flatpak remote-modify flathub --no-filter
-  become: true
+- include_tasks: flathub.yaml
   tags: dbeaver-ce
 - name: Install dbeaver-ce via flatpak
   community.general.flatpak:
