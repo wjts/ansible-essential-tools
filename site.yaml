@@ -70,7 +70,6 @@
          - zsh
          - ncdu
          - powertop
-         - tlp
          - ansible
          - fedora-workstation-repositories
          - google-chrome-stable
@@ -90,14 +89,6 @@
          - lm_sensors
       become: true
       tags: utils
-
-    - name: enable tlp service
-      ansible.builtin.systemd:
-        state: restarted
-        enabled: yes
-        name: tlp
-      become: true
-      tags: tlp
 
     - name: ZSH
       include_tasks: zsh.yaml
