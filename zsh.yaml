@@ -32,6 +32,7 @@
   shell:
     cmd: curl --proto '=https' -fLsS https://rossmacarthur.github.io/install/crate.sh | bash -s -- --repo rossmacarthur/sheldon --to ~/.local/bin
     creates: ~/.local/bin/sheldon
+    warn: no
   tags: zsh
 - name: create sheldon directory
   file:
