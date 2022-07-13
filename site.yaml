@@ -67,7 +67,6 @@
          - VirtualBox
          - git
          - btrbk
-         - zsh
          - ncdu
          - powertop
          - ansible

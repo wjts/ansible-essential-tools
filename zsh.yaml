@@ -1,3 +1,9 @@
+- name: install zsh
+  package:
+    name: zsh
+    state: present
+  become: true
+  tags: zsh
 - name: change default shell
   user:
     name: "{{ ansible_user }}"
