@@ -4,3 +4,13 @@
     state: present
   become: true
   tags: git-delta
+- name: configure git-delta
+  shell: |
+    git config --global config.pager "delta"
+    git config --global interactive.diffFilter "delta --color-only"
+    git config --global delta.navigate "true"
+    git config --global delta.light "false"
+    git config --global delta.line-numbers "true"
+    git config --global merge.conflictstyle "diff3"
+    git config --global diff.colorMoved "default"
+  tags: git-delta
