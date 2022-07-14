@@ -149,6 +149,10 @@
       include_tasks: postman_flatpak.yaml
       tags: postman
 
+    - name: git-delta
+      include_tasks: git-delta.yaml
+      tags: git-delta
+
     - name: add user to groups
       user:
         name: "{{ ansible_user }}"
