@@ -14,7 +14,8 @@
   package:
     name:
      - libxcrypt-compat
-     - google-cloud-cli
+     - google-cloud-sdk
+     - google-cloud-sdk-gke-gcloud-auth-plugin
     state: present
     update_cache: yes
   become: true
