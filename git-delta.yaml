@@ -1,0 +1,6 @@
+- name: install git-delta
+  package:
+    name: zsh
+    state: present
+  become: true
+  tags: git-delta
