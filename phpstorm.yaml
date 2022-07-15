@@ -17,11 +17,33 @@
     - phpstorm_releases.json.PS[0].build is defined
   tags: phpstorm
 
+- name: Is phpstorm installed?
+  stat:
+    path: "{{ phpstorm_install_path }}/build.txt"
+  register: phpstorm_installed
+  tags: phpstorm
+
+- name: Get local phpstorm build version
+  slurp:
+    src: "{{ phpstorm_install_path }}/build.txt"
+  register: phpstorm_local_build_version
+  when: phpstorm_installed.stat.exists
+  tags: phpstorm
+
+- name: Compare phpstorm version local vs remote
+  set_fact:
+    install_new_phpstorm: true
+  when:
+    - phpstorm_installed.stat.exists
+    - phpstorm_local_build_version['content'] | b64decode | trim != "PS-"+phpstorm_available_build
+  tags: phpstorm
+
 - name: Download latest version of PhpStorm
   get_url:
     url: "{{ phpstorm_available_url }}"
     dest: "/tmp/PhpStorm-{{ phpstorm_available_version }}.tar.gz"
   tags: phpstorm
+  when: install_new_phpstorm is defined or not phpstorm_installed.stat.exists
 
 - name: Create PhpStorm install directory
   become: true
@@ -31,6 +53,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
   tags: phpstorm
+  when: not phpstorm_installed.stat.exists
 
 - name: Extract PhpStorm
   unarchive:
@@ -40,8 +63,8 @@
     dest: "{{ phpstorm_install_path }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    # creates: "{{ phpstorm_install_path }}/build.txt"
   tags: phpstorm
+  when: install_new_phpstorm is defined or not phpstorm_installed.stat.exists
 
 - name: Check if libvirt firewall zone exists
   command: firewall-cmd --get-zones
