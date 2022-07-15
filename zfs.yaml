@@ -28,14 +28,26 @@
     update_cache: yes
   become: true
   tags: zfs
+  ignore_errors: true
+  register: install_zfs
+
+- name: reboot if zfs install failed (probably newest kernel was installed in this run)
+  reboot:
+    reboot_timeout: 900
+  become: true
+  when: install_zfs is failed
+  tags: zfs
 
 - name: modprobe zfs
   community.general.modprobe:
     name: zfs
     state: present
   become: true
+  tags: zfs
 
 - name: load zfs at boot
-  command: echo zfs > /etc/modules-load.d/zfs.conf
+  command:
+    cmd: echo zfs > /etc/modules-load.d/zfs.conf
+    creates: /etc/modules-load.d/zfs.conf
   become: true
   tags: zfs
