@@ -65,7 +65,7 @@
 
 - name: Download latest version of k9s
   unarchive:
-    src: "https://github.com/derailed/k9s/releases/download/v0.25.18/k9s_Linux_x86_64.tar.gz"
+    src: "https://github.com/derailed/k9s/releases/download/v0.26.0/k9s_Linux_x86_64.tar.gz"
     dest: /usr/local/bin/
     exclude:
       - README.md
