@@ -10,6 +10,13 @@
   become: true
   tags: gcloud
 
+- name: Make sure there is no conflicting package
+  package:
+    name: google-cloud-cli
+    state: absent
+  become: true
+  tags: gcloud
+  
 - name: Install gcloud
   package:
     name:
